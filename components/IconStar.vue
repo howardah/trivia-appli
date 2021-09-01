@@ -1,6 +1,5 @@
 <template>
   <svg
-    id="Layer_1"
     class="h-3 mt-1 float-right inline-block"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +34,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style scoped>
-
-</style>

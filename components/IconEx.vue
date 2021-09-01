@@ -1,6 +1,5 @@
 <template>
   <svg
-    id="Layer_1"
     class="w-5 inline-block -mr-2 -mt-1 ml-1"
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
@@ -11,14 +10,11 @@
     style="enable-background:new 0 0 864 864;"
     xml:space="preserve"
   >
-    <style type="text/css">
-      .st0{fill:#FFFFFF;}
-    </style>
     <g>
       <circle :class="`fill-current text-${hue}-${tint.toString()} group-hover:text-${hue}-${hoverTint.toString()}`" cx="432" cy="432" r="432" />
     </g>
     <polygon
-      class="st0"
+      class="fill-current text-white"
       points="665.4,269.4 594.6,198.6 432,361.3 269.4,198.6 198.6,269.4 361.3,432 198.6,594.6 269.4,665.4 432,502.7 594.6,665.4 665.4,594.6 502.7,432"
     />
   </svg>
@@ -46,7 +42,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style scoped>
-
-</style>

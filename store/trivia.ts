@@ -1,5 +1,8 @@
 import { GetterTree, ActionTree, MutationTree } from "vuex";
-import { initialiseTriviaQuestion, TriviaQuestion } from "~/assets/trivia_question";
+import {
+  initialiseTriviaQuestion,
+  TriviaQuestion
+} from "~/assets/trivia_question";
 
 export const state = () => ({
   questions: [] as TriviaQuestion[],
@@ -40,13 +43,15 @@ export const actions: ActionTree<TriviaState, TriviaState> = {
         //ToDo: add error handling
       });
 
-    triviaResults.results.forEach((questionResult: any, index: number) => {
-      const question: TriviaQuestion = initialiseTriviaQuestion({
-        ...questionResult,
-        id: null
+    if (triviaResults) {
+      triviaResults.results.forEach((questionResult: any, index: number) => {
+        const question: TriviaQuestion = initialiseTriviaQuestion({
+          ...questionResult,
+          id: null
+        });
+        questions.push(question);
       });
-      questions.push(question);
-    });
+    }
 
     commit("ADD_QUESTIONS", questions);
     commit("CHANGE_LOAD_STATE", false);

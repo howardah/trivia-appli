@@ -75,6 +75,16 @@ export default Vue.extend({
       const cColor: string = this.question.categoryColor;
       return cColor;
     }
+    // Because the API is intended for multiple choice
+    // formatted questions, some questions don't make sense
+    // on their own. And though I prefer the questions without
+    // choices, there are some cases where they would be needed.
+    //
+    // So, here could go another computed method with some
+    // logic to look in the question for phrases like
+    // "which of the following", or "which of these" and
+    // selectively choose these questions to display
+    // the multiple choices.
   }
 });
 </script>

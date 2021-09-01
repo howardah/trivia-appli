@@ -1,11 +1,15 @@
 <template>
-  <div class="container">
+  <div
+    class="font-sans m-auto items-center flex text-center justify-center min-h-screen"
+  >
     <div class="w-full">
       <div
-        class="md:sticky md:z-10 md:bg-white w-full md:border-b-2 top-0 right-0 pb-5"
+        class="md:sticky md:z-10 md:bg-white w-full md:border-b-2 md:-top-28 lg:-top-44 right-0 pb-5"
       >
-        <h1 class="title">
-          Trivia!
+        <h1
+          class="title font-press-start text-6xl p-10 pb-5 text-gray-700 sm:text-7xl sm:p-15 sm:pb-5 lg:text-8xl lg:p-20 lg:pb-5"
+        >
+          trivia!
         </h1>
         <div class="max-w-screen-lg p-2 m-auto">
           FILTERS:
@@ -77,7 +81,6 @@ for (const key in colorLookup) {
 export default Vue.extend({
   async asyncData ({ store }) {
     await store.dispatch('trivia/fetchQuestions');
-    // store.commit("trivia/ADD_QUESTIONS", store.state.trivia.questions);
   },
   data () {
     return { search: '', categories: categories as CategoryFilter[] };
@@ -91,39 +94,32 @@ export default Vue.extend({
       return activeCategories;
     },
     questions () {
-      if (this.search === '') {
-        return this.$store.state.trivia.questions.filter(
-          (q: TriviaQuestion) => {
-            return this.activeCategories.some(
-              (cat: CategoryFilter) => cat.title === q.categoryClass
-            );
-          }
-        );
-      }
-
-      const searchPhrase = this.search.toLowerCase();
-      const questions: TriviaQuestion[] = this.$store.state.trivia.questions.filter(
+      let filteredQuestions: TriviaQuestion[] = this.$store.state.trivia.questions.filter(
         (q: TriviaQuestion) => {
-          if (
-            !this.activeCategories.some(
-              (cat: CategoryFilter) => cat.title === q.categoryClass
-            )
-          ) { return false; }
-
-          if (q.question.toLowerCase().includes(searchPhrase)) { return true; }
-          if (q.category.toLowerCase().includes(searchPhrase)) { return true; }
-          if (q.difficulty.toLowerCase().includes(searchPhrase)) { return true; }
-          if (q.type.toLowerCase().includes(searchPhrase)) { return true; }
-          if (q.correct_answer.toLowerCase().includes(searchPhrase)) { return true; }
-          for (let i = 0; i < q.incorrect_answers.length; i++) {
-            if (q.incorrect_answers[i].toLowerCase().includes(searchPhrase)) { return true; }
-          }
-
-          return false;
+          return this.activeCategories.some(
+            (cat: CategoryFilter) => cat.title === q.categoryClass
+          );
         }
       );
-      if (questions.length < 4) { this.$store.dispatch('trivia/fetchQuestions', 200); }
-      return questions;
+
+      if (this.search !== '') {
+        const searchPhrase = this.search.toLowerCase();
+        const furtherFilteredQuestions: TriviaQuestion[] = filteredQuestions.filter(
+          (q: TriviaQuestion) => {
+            if (q.question.toLowerCase().includes(searchPhrase)) return true;
+            if (q.category.toLowerCase().includes(searchPhrase)) return true;
+            if (q.difficulty.toLowerCase().includes(searchPhrase)) return true;
+            if (q.type.toLowerCase().includes(searchPhrase)) return true;
+            if (q.correct_answer.toLowerCase().includes(searchPhrase)) return true;
+            return false;
+          }
+        );
+        filteredQuestions = furtherFilteredQuestions;
+      }
+      if (filteredQuestions.length < 4) {
+        this.$store.dispatch('trivia/fetchQuestions', 200);
+      }
+      return filteredQuestions;
     },
     loadingCards () {
       return this.$store.state.trivia.loading ? new Array(25) : [];
@@ -139,7 +135,9 @@ export default Vue.extend({
       const filterList: string[] = this.$route.query.categories.split(',');
       const categories: CategoryFilter[] = [...this.categories];
       categories.forEach((category) => {
-        if (!filterList.includes(category.title)) { category.active = false; }
+        if (!filterList.includes(category.title)) {
+          category.active = false;
+        }
       });
       this.categories = categories;
     } else {
@@ -154,9 +152,15 @@ export default Vue.extend({
     },
     loadMoreIfNeeded () {
       const bottomOfWindow =
-        document.documentElement.scrollTop + window.innerHeight ===
-        document.documentElement.offsetHeight;
+        document.documentElement.scrollTop + window.innerHeight >
+        document.documentElement.offsetHeight - 100;
       if (bottomOfWindow) {
+        // Here, it would be better to have an API endpoint
+        // where I could ask for the trivia questions that match my filters
+        // because, as is, if there are no more questions in the db
+        // that match the filters/search, then the application will just
+        // keep battering the API with requests and have no way
+        // of knowing that it should stop asking.
         const requestCount = this.search === '' ? 25 : 200;
         this.$store.dispatch('trivia/fetchQuestions', requestCount);
       }
@@ -178,7 +182,7 @@ export default Vue.extend({
           category.active = catIndex === index;
         });
       }
-      // categories[index].active = !categories[index].active;
+
       this.categories = categories;
       this.updateCategoriesQuery();
     },
@@ -203,41 +207,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style>
-/* Sample `apply` at-rules with Tailwind CSS
-.container {
-@apply min-h-screen flex justify-center items-center text-center mx-auto;
-}
-*/
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
-}
-</style>

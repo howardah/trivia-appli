@@ -50,7 +50,7 @@ function initialiseTriviaQuestion(
       if (catMatch !== null) categoryClass = catMatch[1];
     }
 
-    return categoryClass.replaceAll(" ", "-");
+    return categoryClass.replace(/ /g, "-");
   })();
 
   const categoryColor = colorLookup[categoryClass];

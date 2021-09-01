@@ -1,21 +1,21 @@
 <template>
   <div
     :class="
-      `text-${textColor} 
-      inline-block border group
-      px-4 py-1 capitalize m-2 
-      cursor-pointer rounded-full bg-${bgColor}-500 
+      `text-${textColor}
+      inline-block border grou
+      px-4 py-1 capitalize m-2
+      cursor-pointer rounded-full bg-${bgColor}-500
       hover:bg-${bgColor}-600`
     "
   >
-    <slot></slot>
-    <icon-ex v-if="active" :hue="color"></icon-ex>
+    <slot />
+    <icon-ex v-if="active" :hue="color" />
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import IconEx from "./IconEx.vue";
+import Vue from 'vue';
+import IconEx from './IconEx.vue';
 
 export default Vue.extend({
   components: { IconEx },
@@ -26,18 +26,18 @@ export default Vue.extend({
     },
     color: {
       type: String,
-      default: "grey"
+      default: 'grey'
     }
   },
   computed: {
-    bgColor() {
-      if (!this.active) return "white";
+    bgColor () {
+      if (!this.active) return 'white';
       const color: string = this.color;
       return color;
     },
-    textColor() {
-      if (this.active) return "white";
-      return "grey-800";
+    textColor () {
+      if (this.active) return 'white';
+      return 'grey-800';
     }
   }
 });

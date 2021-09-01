@@ -10,12 +10,11 @@
     >
       <div :class="`front rounded-md absolute w-full h-full bg-${cColor}-300 text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-base`">
         <div :class="`font-thin rounded-t-md px-5 py-3 bg-${cColor}-500`">
-          <span class="text-white font-bold" v-html="question.category"></span
-          ><icon-star
+          <span class="text-white font-bold" v-html="question.category" /><icon-star
             v-for="(key, index) in Array(starRating)"
             :key="index"
             :hue="cColor"
-          ></icon-star>
+          />
         </div>
         <div
           :class="`font-bold p-5 text-${cColor}-900`"
@@ -23,9 +22,9 @@
             (question.type === 'boolean' ? 'True or False: ' : '') +
               question.question
           "
-        ></div>
+        />
 
-        <div></div>
+        <div />
       </div>
       <div
         :class="
@@ -35,61 +34,44 @@
         <div
           :class="`text-white text-lg sm:text-xl md:text-2xl lg:text-base xl:text-sm text-${cColor}-100`"
           v-html="question.formattedQuestion"
-        ></div>
+        />
         <div
           class="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-2xl xl:text-2xl text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
           v-html="question.correct_answer"
-        ></div>
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { TriviaQuestion, TriviaQuestionType } from "~/assets/trivia_question";
+import Vue from 'vue';
+import { TriviaQuestion } from '~/assets/trivia_question';
 
 export default Vue.extend({
-  data() {
-    return {
-      displaySide: "front",
-      flipped: false
-    };
-  },
   props: {
     question: {
       required: true,
       type: Object as () => TriviaQuestion
-      // validator: function(value) {
-      //   // console.log(value instanceof TriviaQuestion);
-      //   // console.log(typeof value);
-      //   return true;
-      //   const arr: string[] = [
-      //     "category",
-      //     "type",
-      //     "question",
-      //     "difficulty",
-      //     "correct_answer",
-      //     "incorrect_answers"
-      //   ];
-      //   const hasAllKeys: boolean = arr.every(item =>
-      //     value.hasOwnProperty(item)
-      //   );
-      //   return hasAllKeys;
-      // }
     }
   },
+  data () {
+    return {
+      displaySide: 'front',
+      flipped: false
+    };
+  },
   computed: {
-    starRating() {
-      const difficulties: string[] = ["easy", "medium", "hard"];
+    starRating () {
+      const difficulties: string[] = ['easy', 'medium', 'hard'];
       const difficulty: string = this.question.difficulty;
       return difficulties.indexOf(difficulty) + 1;
     },
-    cClass() {
+    cClass () {
       const cClass: string = this.question.categoryClass;
       return cClass;
     },
-    cColor() {
+    cColor () {
       const cColor: string = this.question.categoryColor;
       return cColor;
     }

@@ -1,18 +1,18 @@
-const colors = require("tailwindcss/colors");
+import colors from 'tailwindcss/colors';
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "nyt-movie-reviews",
+    title: 'nyt-movie-reviews',
     htmlAttrs: {
-      lang: "en"
+      lang: 'en'
     },
     meta: [
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" }
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: '' }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -27,15 +27,15 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/typescript
-    "@nuxt/typescript-build",
+    '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
-    "@nuxtjs/tailwindcss"
+    '@nuxtjs/tailwindcss'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     // https://go.nuxtjs.dev/axios
-    "@nuxtjs/axios"
+    '@nuxtjs/axios'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -62,7 +62,7 @@ export default {
             600: '#936642',
             700: '#6D4B24',
             800: '#634219',
-            900: '#473516',
+            900: '#473516'
           },
           red: colors.red,
           teal: colors.teal,
@@ -71,7 +71,7 @@ export default {
           gray: colors.blueGray
         }
       },
-      plugins: [require("@tailwindcss/aspect-ratio")]
+      plugins: [require('@tailwindcss/aspect-ratio')]
     }
   },
 

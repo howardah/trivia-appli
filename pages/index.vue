@@ -11,9 +11,9 @@
           FILTERS:
           <filter-button
             v-for="(category, index) in categories"
+            :key="index"
             :color="category.color"
             :active="category.active"
-            :key="index"
             @click.native="filterToggle(index)"
             @contextmenu.native="
               e => {
@@ -21,20 +21,21 @@
                 filterSelect(index);
               }
             "
-            >{{ category.title.replaceAll("-", " ") }}</filter-button
           >
+            {{ category.title.replaceAll("-", " ") }}
+          </filter-button>
           <input
+            v-model="search"
             class="border rounded-md px-2"
             placeholder="SEARCH"
             type="text"
-            v-model="search"
-          />
+          >
           <close-button
-            class="cursor-pointer"
             v-if="search !== ''"
+            class="cursor-pointer"
             color="gray"
             @click.native="clearSearch"
-          ></close-button>
+          />
         </div>
       </div>
       <div
@@ -44,20 +45,19 @@
           v-for="question in questions"
           :key="question.id"
           :question="question"
-        >
-        </trivia-card>
+        />
         <trivia-placeholder-card
           v-for="(empty, index) in loadingCards"
           :key="index + 20000"
-        ></trivia-placeholder-card>
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { colorLookup, TriviaQuestion } from "~/assets/trivia_question";
+import Vue from 'vue';
+import { colorLookup, TriviaQuestion } from '~/assets/trivia_question';
 
 type CategoryFilter = {
   title: string;
@@ -66,7 +66,7 @@ type CategoryFilter = {
 };
 
 const categories: CategoryFilter[] = [];
-for (let key in colorLookup) {
+for (const key in colorLookup) {
   categories.push({
     title: key,
     color: colorLookup[key],
@@ -75,23 +75,23 @@ for (let key in colorLookup) {
 }
 
 export default Vue.extend({
-  async asyncData({ store }) {
-    await store.dispatch("trivia/fetchQuestions");
+  async asyncData ({ store }) {
+    await store.dispatch('trivia/fetchQuestions');
     // store.commit("trivia/ADD_QUESTIONS", store.state.trivia.questions);
   },
-  data() {
-    return { search: "", categories: categories as CategoryFilter[] };
+  data () {
+    return { search: '', categories: categories as CategoryFilter[] };
   },
   computed: {
-    activeCategories() {
+    activeCategories () {
       const activeCategories: CategoryFilter[] = this.categories.filter(
         (category: CategoryFilter) => category.active
       );
 
       return activeCategories;
     },
-    questions() {
-      if (this.search === "")
+    questions () {
+      if (this.search === '') {
         return this.$store.state.trivia.questions.filter(
           (q: TriviaQuestion) => {
             return this.activeCategories.some(
@@ -99,62 +99,75 @@ export default Vue.extend({
             );
           }
         );
+      }
 
       const searchPhrase = this.search.toLowerCase();
       const questions: TriviaQuestion[] = this.$store.state.trivia.questions.filter(
-        (q: TriviaQuestion, index: number) => {
+        (q: TriviaQuestion) => {
           if (
             !this.activeCategories.some(
               (cat: CategoryFilter) => cat.title === q.categoryClass
             )
-          )
-            return false;
+          ) { return false; }
 
-          if (q.question.toLowerCase().includes(searchPhrase)) return true;
-          if (q.category.toLowerCase().includes(searchPhrase)) return true;
-          if (q.difficulty.toLowerCase().includes(searchPhrase)) return true;
-          if (q.type.toLowerCase().includes(searchPhrase)) return true;
-          if (q.correct_answer.toLowerCase().includes(searchPhrase))
-            return true;
+          if (q.question.toLowerCase().includes(searchPhrase)) { return true; }
+          if (q.category.toLowerCase().includes(searchPhrase)) { return true; }
+          if (q.difficulty.toLowerCase().includes(searchPhrase)) { return true; }
+          if (q.type.toLowerCase().includes(searchPhrase)) { return true; }
+          if (q.correct_answer.toLowerCase().includes(searchPhrase)) { return true; }
           for (let i = 0; i < q.incorrect_answers.length; i++) {
-            if (q.incorrect_answers[i].toLowerCase().includes(searchPhrase))
-              return true;
+            if (q.incorrect_answers[i].toLowerCase().includes(searchPhrase)) { return true; }
           }
 
           return false;
         }
       );
-      if (questions.length < 4)
-        this.$store.dispatch("trivia/fetchQuestions", 200);
+      if (questions.length < 4) { this.$store.dispatch('trivia/fetchQuestions', 200); }
       return questions;
     },
-    loadingCards() {
+    loadingCards () {
       return this.$store.state.trivia.loading ? new Array(25) : [];
     }
   },
+  mounted () {
+    this.loadMoreOnScroll();
+
+    if (
+      this.$route.query.categories !== undefined &&
+      typeof this.$route.query.categories === 'string'
+    ) {
+      const filterList: string[] = this.$route.query.categories.split(',');
+      const categories: CategoryFilter[] = [...this.categories];
+      categories.forEach((category) => {
+        if (!filterList.includes(category.title)) { category.active = false; }
+      });
+      this.categories = categories;
+    } else {
+      this.updateCategoriesQuery();
+    }
+  },
   methods: {
-    loadMoreOnScroll() {
+    loadMoreOnScroll () {
       window.onscroll = () => {
         this.loadMoreIfNeeded();
       };
     },
-    loadMoreIfNeeded() {
+    loadMoreIfNeeded () {
       const bottomOfWindow =
         document.documentElement.scrollTop + window.innerHeight ===
         document.documentElement.offsetHeight;
       if (bottomOfWindow) {
-        const requestCount = this.search === "" ? 25 : 200;
-        this.$store.dispatch("trivia/fetchQuestions", requestCount);
-        console.log(this.$store.getters["trivia/questionCount"]);
+        const requestCount = this.search === '' ? 25 : 200;
+        this.$store.dispatch('trivia/fetchQuestions', requestCount);
       }
     },
-    filterToggle(index: number) {
+    filterToggle (index: number) {
       const categories: CategoryFilter[] = [...this.categories];
       categories[index].active = !categories[index].active;
       this.categories = categories;
       this.updateCategoriesQuery();
     },
-    filterSelect(index: number) {
+    filterSelect (index: number) {
       const categories: CategoryFilter[] = [...this.categories];
       if (this.activeCategories.length === 1 && categories[index].active) {
         categories.forEach((category: CategoryFilter, catIndex: number) => {
@@ -169,7 +182,7 @@ export default Vue.extend({
       this.categories = categories;
       this.updateCategoriesQuery();
     },
-    updateCategoriesQuery() {
+    updateCategoriesQuery () {
       const activeCategories: CategoryFilter[] = this.categories.filter(
         (category: CategoryFilter) => category.active
       );
@@ -179,30 +192,13 @@ export default Vue.extend({
         query: {
           ...this.$route.query,
           categories: activeCategories
-            .reduce((p: string, cat: CategoryFilter) => p + cat.title + ",", "")
+            .reduce((p: string, cat: CategoryFilter) => p + cat.title + ',', '')
             .slice(0, -1)
         }
       });
     },
-    clearSearch() {
-      this.search = "";
-    }
-  },
-  mounted() {
-    this.loadMoreOnScroll();
-
-    if (
-      this.$route.query.categories !== undefined &&
-      typeof this.$route.query.categories === "string"
-    ) {
-      const filterList: string[] = this.$route.query.categories.split(",");
-      const categories: CategoryFilter[] = [...this.categories];
-      categories.forEach(category => {
-        if (!filterList.includes(category.title)) category.active = false;
-      });
-      this.categories = categories;
-    } else {
-      this.updateCategoriesQuery();
+    clearSearch () {
+      this.search = '';
     }
   }
 });

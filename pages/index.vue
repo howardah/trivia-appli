@@ -50,6 +50,7 @@
           :key="question.id"
           :question="question"
         />
+        <!-- placeholder cards index +20000 to avoid duplicate ids -->
         <trivia-placeholder-card
           v-for="(empty, index) in loadingCards"
           :key="index + 20000"

@@ -8,9 +8,17 @@
         `border rounded-md text-left relative flip-card-inner aspect-w-16 aspect-h-9 ${cClass}`
       "
     >
-      <div :class="`front rounded-md absolute w-full h-full bg-${cColor}-300 text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-base`">
+      <!-- front of card -->
+      <div
+        :class="
+          `front rounded-md absolute w-full h-full bg-${cColor}-300 text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-base`
+        "
+      >
         <div :class="`font-thin rounded-t-md px-5 py-3 bg-${cColor}-500`">
-          <span class="text-white font-bold" v-html="question.category" /><icon-star
+          <span
+            class="text-white font-bold"
+            v-html="question.category"
+          /><icon-star
             v-for="(key, index) in Array(starRating)"
             :key="index"
             :hue="cColor"
@@ -26,13 +34,16 @@
 
         <div />
       </div>
+      <!-- back of card -->
       <div
         :class="
           `back rounded-md p-5 absolute w-full h-full bg-${cColor}-500 text-white`
         "
       >
         <div
-          :class="`text-white text-lg sm:text-xl md:text-2xl lg:text-base xl:text-sm text-${cColor}-100`"
+          :class="
+            `text-white text-lg sm:text-xl md:text-2xl lg:text-base xl:text-sm text-${cColor}-100`
+          "
           v-html="question.formattedQuestion"
         />
         <div

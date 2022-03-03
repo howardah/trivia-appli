@@ -15,6 +15,7 @@ export default {
   },
   css: [],
   plugins: [],
+  target: 'static',
   components: true,
   buildModules: [
     '@nuxt/typescript-build',

@@ -9,32 +9,33 @@
     "
   >
     <slot />
-    <icon-ex v-if="active" :hue="color" />
+    <IconsClose v-if="active" :hue="color" />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import IconEx from './IconEx.vue';
 
 export default Vue.extend({
-  components: { IconEx },
   props: {
     active: {
       type: Boolean,
       required: true
     },
+    
     color: {
       type: String,
       default: 'grey'
     }
   },
+
   computed: {
     bgColor () {
       if (!this.active) return 'white';
       const color: string = this.color;
       return color;
     },
+
     textColor () {
       if (this.active) return 'white';
       return 'grey-800';

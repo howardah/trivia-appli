@@ -34,7 +34,7 @@
             placeholder="SEARCH"
             type="text"
           >
-          <close-button
+          <CloseButton
             v-if="search !== ''"
             class="cursor-pointer"
             color="gray"
@@ -45,13 +45,13 @@
       <div
         class="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 auto-rows-max max-w-screen-xl m-auto mt-5"
       >
-        <trivia-card
+        <TriviaCard
           v-for="question in questions"
           :key="question.id"
           :question="question"
         />
         <!-- placeholder cards index +20000 to avoid duplicate ids -->
-        <trivia-placeholder-card
+        <TriviaCardPlaceholder
           v-for="(empty, index) in loadingCards"
           :key="index + 20000"
         />

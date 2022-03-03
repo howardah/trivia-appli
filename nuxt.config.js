@@ -51,7 +51,19 @@ export default {
           teal: colors.teal,
           amber: colors.amber,
           orange: colors.orange,
-          gray: colors.blueGray
+          gray: colors.blueGray,
+          lightGray: {
+            50: colors.white[100],
+            100: colors.white[100],
+            200: colors.white[100],
+            300: colors.white[100],
+            400: colors.blueGray[100],
+            500: colors.blueGray[200],
+            600: colors.blueGray[200],
+            700: colors.blueGray[300],
+            800: colors.blueGray[400],
+            900: colors.blueGray[500]
+          }
         },
         fontFamily: {
           'press-start': [

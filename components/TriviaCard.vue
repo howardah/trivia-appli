@@ -15,21 +15,16 @@
         "
       >
         <div :class="`font-thin rounded-t-md px-5 py-3 bg-${cColor}-500`">
-          <span
-            class="text-white font-bold"
-            v-html="question.category"
-          /><icon-star
-            v-for="(key, index) in Array(starRating)"
+          <span class="text-white font-bold" v-html="question.category" />
+          <IconsStar
+            v-for="(key, index) in starRating"
             :key="index"
             :hue="cColor"
           />
         </div>
         <div
           :class="`font-bold p-5 text-${cColor}-900`"
-          v-html="
-            (question.type === 'boolean' ? 'True or False: ' : '') +
-              question.question
-          "
+          v-html="question.formattedQuestion"
         />
 
         <div />
@@ -66,22 +61,26 @@ export default Vue.extend({
       type: Object as () => TriviaQuestion
     }
   },
+  
   data () {
     return {
       displaySide: 'front',
       flipped: false
     };
   },
+
   computed: {
     starRating () {
       const difficulties: string[] = ['easy', 'medium', 'hard'];
       const difficulty: string = this.question.difficulty;
-      return difficulties.indexOf(difficulty) + 1;
+      return new Array(difficulties.indexOf(difficulty) + 1);
     },
+
     cClass () {
       const cClass: string = this.question.categoryClass;
       return cClass;
     },
+
     cColor () {
       const cColor: string = this.question.categoryColor;
       return cColor;

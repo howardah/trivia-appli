@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils';
 import TriviaCard from '@/components/TriviaCard.vue';
-import TriviaPlaceholderCard from '@/components/TriviaPlaceholderCard.vue';
-import FilterButton from '@/components/FilterButton.vue';
+import TriviaCardPlaceholder from '~/components/TriviaCard/Placeholder.vue';
+import FilterButton from '~/components/Filter/Button.vue';
 import { initialiseTriviaQuestion } from '@/assets/trivia_question.ts';
 
 // Because I wanted to take advantage of Nuxt's auto import of components
@@ -44,9 +44,9 @@ describe('TriviaCard.vue', () => {
   });
 });
 
-describe('TriviaPlaceholderCard.vue', () => {
+describe('TriviaCardPlaceholder.vue', () => {
   test('Test that Trivia Card Placeholder Rendors', () => {
-    const wrapper = mount(TriviaPlaceholderCard);
+    const wrapper = mount(TriviaCardPlaceholder);
     expect(wrapper.vm).toBeTruthy();
   });
 });

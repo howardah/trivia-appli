@@ -9,8 +9,7 @@
     "generate": "nuxt generate",
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "yarn lint:js",
-    "test": "nuxt build && jest",
-    "retest": "jest"
+    "test": "jest"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.5",

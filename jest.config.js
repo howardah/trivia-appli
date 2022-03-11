@@ -20,5 +20,5 @@ module.exports = {
     '<rootDir>/components/**/*.vue',
     '<rootDir>/pages/**/*.vue'
   ],
-  setupFiles: ['./.nuxt/components/plugin.js']
+  setupFiles: ['./test/setup.jest.js']
 };

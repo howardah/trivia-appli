@@ -27,7 +27,7 @@ describe("TriviaCard.vue", () => {
   });
 
   test("Test that Trivia Card Rendors Boolean Question", () => {
-    const wrapper: Wrapper<TriviaCard, Element> = mount(TriviaCard, {
+    const wrapper: Wrapper<Vue, Element> = mount(TriviaCard, {
       propsData: {
         question: testQuestion,
       },
@@ -36,7 +36,7 @@ describe("TriviaCard.vue", () => {
   });
 
   test("Test that Trivia Card Flips When Clicked", async () => {
-    const wrapper: Wrapper<TriviaCard, Element> = mount(TriviaCard, {
+    const wrapper: Wrapper<Vue, Element> = mount(TriviaCard, {
       propsData: {
         question: testQuestion,
       },
@@ -52,9 +52,7 @@ describe("TriviaCard.vue", () => {
 
 describe("TriviaCardPlaceholder.vue", () => {
   test("Test that Trivia Card Placeholder Rendors", () => {
-    const wrapper: Wrapper<TriviaCardPlaceholder, Element> = mount(
-      TriviaCardPlaceholder
-    );
+    const wrapper: Wrapper<Vue, Element> = mount(TriviaCardPlaceholder);
     expect(wrapper.vm).toBeTruthy();
   });
 });
@@ -64,14 +62,14 @@ describe("FilterButton.vue", () => {
     /<svg[\w\W]*?>[\w\W]*<circle[\w\W]*?<\/circle>[\w\W]*<polygon[\w\W]*?><\/polygon>[\w\W]*?<\/svg>/;
 
   test("Test that the filter button renders the X icon when active", () => {
-    const wrapper: Wrapper<FilterButton, Element> = mount(FilterButton, {
+    const wrapper: Wrapper<Vue, Element> = mount(FilterButton, {
       propsData: { active: true },
     });
     expect(wrapper.html()).toMatch(iconCloseRegEx);
   });
 
   test("Test that the filter button doesn't render the X icon when inactive", () => {
-    const wrapper: Wrapper<FilterButton, Element> = mount(FilterButton, {
+    const wrapper: Wrapper<Vue, Element> = mount(FilterButton, {
       propsData: { active: false },
     });
     expect(wrapper.html()).not.toMatch(iconCloseRegEx);
@@ -81,7 +79,7 @@ describe("FilterButton.vue", () => {
 describe("IconsClose.vue", () => {
   Object.values(colorLookup).forEach((color) => {
     test(`Test that ${color} render correctly`, () => {
-      const wrapper: Wrapper<IconsClose, Element> = mount(IconsClose, {
+      const wrapper: Wrapper<Vue, Element> = mount(IconsClose, {
         propsData: {
           hue: color,
           tint: 600,
@@ -93,7 +91,7 @@ describe("IconsClose.vue", () => {
   });
 
   test(`Test that tint of 50 renders as 100 for hover`, () => {
-    const wrapper: Wrapper<IconsClose, Element> = mount(IconsClose, {
+    const wrapper: Wrapper<Vue, Element> = mount(IconsClose, {
       propsData: {
         hue: "fuchsia",
         tint: 50,

@@ -52,7 +52,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TriviaQuestion } from '~/assets/trivia_question';
+import { TriviaQuestion } from '~/@types/trivia-question';
 
 export default Vue.extend({
   props: {

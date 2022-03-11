@@ -2,7 +2,7 @@ import { GetterTree, ActionTree, MutationTree } from "vuex";
 import {
   initialiseTriviaQuestion,
   TriviaQuestion
-} from "~/assets/trivia_question";
+} from "~/@types/trivia-question";
 
 export const state = () => ({
   questions: [] as TriviaQuestion[],

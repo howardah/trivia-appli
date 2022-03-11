@@ -2,7 +2,7 @@ import { mount } from '@vue/test-utils';
 import TriviaCard from '@/components/TriviaCard.vue';
 import TriviaCardPlaceholder from '~/components/TriviaCard/Placeholder.vue';
 import FilterButton from '~/components/Filter/Button.vue';
-import { initialiseTriviaQuestion } from '@/assets/trivia_question.ts';
+import { initialiseTriviaQuestion } from '~/@types/trivia-question';
 
 // Because I wanted to take advantage of Nuxt's auto import of components
 // I had to do something a little 'hacky' feeling to get the tests to accept

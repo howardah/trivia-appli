@@ -2,7 +2,9 @@ import { mount, Wrapper } from "@vue/test-utils";
 import TriviaCard from "@/components/TriviaCard.vue";
 import TriviaCardPlaceholder from "~/components/TriviaCard/Placeholder.vue";
 import FilterButton from "~/components/Filter/Button.vue";
+import IconsClose from "~/components/Icons/Close.vue";
 import {
+  colorLookup,
   initialiseTriviaQuestion,
   TriviaQuestion,
 } from "~/@types/trivia-question";
@@ -73,5 +75,31 @@ describe("FilterButton.vue", () => {
       propsData: { active: false },
     });
     expect(wrapper.html()).not.toMatch(iconCloseRegEx);
+  });
+});
+
+describe("IconsClose.vue", () => {
+  Object.values(colorLookup).forEach((color) => {
+    test(`Test that ${color} render correctly`, () => {
+      const wrapper: Wrapper<IconsClose, Element> = mount(IconsClose, {
+        propsData: {
+          hue: color,
+          tint: 600,
+        },
+      });
+      expect(wrapper.html()).toContain(`text-${color}-600`);
+      expect(wrapper.html()).toContain(`group-hover:text-${color}-700`);
+    });
+  });
+
+  test(`Test that tint of 50 renders as 100 for hover`, () => {
+    const wrapper: Wrapper<IconsClose, Element> = mount(IconsClose, {
+      propsData: {
+        hue: "fuchsia",
+        tint: 50,
+      },
+    });
+    expect(wrapper.html()).toContain(`text-fuchsia-50`);
+    expect(wrapper.html()).toContain(`group-hover:text-fuchsia-100`);
   });
 });

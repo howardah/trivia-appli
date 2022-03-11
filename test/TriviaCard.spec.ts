@@ -50,27 +50,28 @@ describe("TriviaCard.vue", () => {
 
 describe("TriviaCardPlaceholder.vue", () => {
   test("Test that Trivia Card Placeholder Rendors", () => {
-    const wrapper: Wrapper<TriviaCardPlaceholder, Element> = mount(TriviaCardPlaceholder);
+    const wrapper: Wrapper<TriviaCardPlaceholder, Element> = mount(
+      TriviaCardPlaceholder
+    );
     expect(wrapper.vm).toBeTruthy();
   });
 });
 
 describe("FilterButton.vue", () => {
+  const iconCloseRegEx =
+    /<svg[\w\W]*?>[\w\W]*<circle[\w\W]*?<\/circle>[\w\W]*<polygon[\w\W]*?><\/polygon>[\w\W]*?<\/svg>/;
+
   test("Test that the filter button renders the X icon when active", () => {
     const wrapper: Wrapper<FilterButton, Element> = mount(FilterButton, {
       propsData: { active: true },
     });
-    expect(wrapper.html()).toMatch(
-      /<svg[\w\W]*?>[\w\W]*<circle[\w\W]*?<\/circle>[\w\W]*<polygon[\w\W]*?><\/polygon>[\w\W]*?<\/svg>/
-    );
+    expect(wrapper.html()).toMatch(iconCloseRegEx);
   });
 
   test("Test that the filter button doesn't render the X icon when inactive", () => {
     const wrapper: Wrapper<FilterButton, Element> = mount(FilterButton, {
       propsData: { active: false },
     });
-    expect(wrapper.html()).not.toMatch(
-      /<svg[\w\W]*?>[\w\W]*<circle[\w\W]*?<\/circle>[\w\W]*<polygon[\w\W]*?><\/polygon>[\w\W]*?<\/svg>/
-    );
+    expect(wrapper.html()).not.toMatch(iconCloseRegEx);
   });
 });

@@ -4,14 +4,14 @@ export default {
   head: {
     title: "Trivia! Trivia!",
     htmlAttrs: {
-      lang: "en"
+      lang: "en",
     },
     meta: [
       { charset: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" }
+      { hid: "description", name: "description", content: "" },
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
   },
   css: [],
   plugins: [],
@@ -20,7 +20,7 @@ export default {
   buildModules: [
     "@nuxt/typescript-build",
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/google-fonts"
+    "@nuxtjs/google-fonts",
   ],
   modules: ["@nuxtjs/axios"],
   axios: {},
@@ -47,7 +47,7 @@ export default {
               600: "#936642",
               700: "#6D4B24",
               800: "#634219",
-              900: "#473516"
+              900: "#473516",
             },
             red: colors.red,
             teal: colors.teal,
@@ -64,8 +64,8 @@ export default {
               600: colors.slate[200],
               700: colors.slate[300],
               800: colors.slate[400],
-              900: colors.slate[500]
-            }
+              900: colors.slate[500],
+            },
           },
           fontFamily: {
             "press-start": [
@@ -76,7 +76,7 @@ export default {
               "Roboto",
               "Helvetica Neue",
               "Arial",
-              "sans-serif"
+              "sans-serif",
             ],
             sans: [
               "Source Sans Pro",
@@ -85,23 +85,20 @@ export default {
               "Roboto",
               "Helvetica Neue",
               "Arial",
-              "sans-serif"
-            ]
-          }
-        }
+              "sans-serif",
+            ],
+          },
+        },
       },
       plugins: [require("@tailwindcss/aspect-ratio")],
-      purge: {
-        enabled: false
-    }
-    }
+    },
   },
 
   googleFonts: {
     families: {
       "Source+Sans+Pro": [300, 400, 600, 700],
-      "Press+Start+2P": true
-    }
+      "Press+Start+2P": true,
+    },
   },
-  build: {}
+  build: {},
 };

@@ -62,7 +62,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { colorLookup, TriviaQuestion } from '~/assets/trivia_question';
+import { colorLookup, TriviaQuestion } from '~/@types/trivia-question';
 
 type CategoryFilter = {
   title: string;

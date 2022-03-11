@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { TriviaQuestion } from '~/assets/trivia_question';
+import { TriviaQuestion } from '~/@types/trivia-question';
 
 const placeholderQuestion: TriviaQuestion = {
   id: 0,

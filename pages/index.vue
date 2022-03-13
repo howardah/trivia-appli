@@ -4,43 +4,14 @@
   >
     <div class="w-full">
       <div
-        class="md:sticky md:z-10 md:bg-white w-full md:border-b-2 md:-top-28 lg:-top-44 right-0 pb-5"
+        class="sticky z-10 bg-white w-full md:border-b-2 -top-24 md:-top-28 lg:-top-44 right-0 md:pb-5"
       >
         <h1
-          class="title font-press-start text-6xl p-10 pb-5 text-gray-700 sm:text-7xl sm:p-15 sm:pb-5 lg:text-8xl lg:p-20 lg:pb-5"
+          class="title font-press-start text-4xl p-10 pb-5 text-gray-700 sm:text-7xl sm:p-15 sm:pb-5 lg:text-8xl lg:p-20 lg:pb-5"
         >
           trivia!
         </h1>
-        <div class="max-w-screen-lg p-2 m-auto">
-          FILTERS:
-          <filter-button
-            v-for="(category, index) in categories"
-            :key="index"
-            :color="category.color"
-            :active="category.active"
-            @click.native="filterToggle(index)"
-            @contextmenu.native="
-              e => {
-                e.preventDefault();
-                filterSelect(index);
-              }
-            "
-          >
-            {{ category.title.replaceAll("-", " ") }}
-          </filter-button>
-          <input
-            v-model="search"
-            class="border rounded-md px-2"
-            placeholder="SEARCH"
-            type="text"
-          >
-          <CloseButton
-            v-if="search !== ''"
-            class="cursor-pointer"
-            color="gray"
-            @click.native="clearSearch"
-          />
-        </div>
+        <FilterMenu :toggle="filterToggle" :alterSearch="alterSearch" :categories="categories" />
       </div>
       <div
         class="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 auto-rows-max max-w-screen-xl m-auto mt-5"
@@ -61,79 +32,73 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import { colorLookup, TriviaQuestion } from '~/@types/trivia-question';
-
-type CategoryFilter = {
-  title: string;
-  color: string;
-  active: boolean;
-};
+import Vue from "vue";
+import { CategoryFilter } from "~/@types/components";
+import { colorLookup, TriviaQuestion } from "~/@types/trivia-question";
 
 const categories: CategoryFilter[] = [];
 for (const key in colorLookup) {
   categories.push({
     title: key,
     color: colorLookup[key],
-    active: true
+    active: true,
   });
 }
 
 export default Vue.extend({
-  async asyncData ({ store }) {
-    await store.dispatch('trivia/fetchQuestions');
+  async asyncData({ store }) {
+    await store.dispatch("trivia/fetchQuestions");
   },
-  data () {
-    return { search: '', categories: categories as CategoryFilter[] };
+  data() {
+    return { search: "", categories: categories as CategoryFilter[] };
   },
   computed: {
-    activeCategories () {
+    activeCategories() {
       const activeCategories: CategoryFilter[] = this.categories.filter(
         (category: CategoryFilter) => category.active
       );
 
       return activeCategories;
     },
-    questions () {
-      let filteredQuestions: TriviaQuestion[] = this.$store.state.trivia.questions.filter(
-        (q: TriviaQuestion) => {
+    questions() {
+      let filteredQuestions: TriviaQuestion[] =
+        this.$store.state.trivia.questions.filter((q: TriviaQuestion) => {
           return this.activeCategories.some(
             (cat: CategoryFilter) => cat.title === q.categoryClass
           );
-        }
-      );
+        });
 
-      if (this.search !== '') {
+      if (this.search !== "") {
         const searchPhrase = this.search.toLowerCase();
-        const furtherFilteredQuestions: TriviaQuestion[] = filteredQuestions.filter(
-          (q: TriviaQuestion) => {
+        const furtherFilteredQuestions: TriviaQuestion[] =
+          filteredQuestions.filter((q: TriviaQuestion) => {
             if (q.question.toLowerCase().includes(searchPhrase)) return true;
             if (q.category.toLowerCase().includes(searchPhrase)) return true;
             if (q.difficulty.toLowerCase().includes(searchPhrase)) return true;
             if (q.type.toLowerCase().includes(searchPhrase)) return true;
-            if (q.correct_answer.toLowerCase().includes(searchPhrase)) return true;
+            if (q.correct_answer.toLowerCase().includes(searchPhrase))
+              return true;
             return false;
-          }
-        );
+          });
         filteredQuestions = furtherFilteredQuestions;
       }
       if (filteredQuestions.length < 4) {
-        this.$store.dispatch('trivia/fetchQuestions', 200);
+        this.$store.dispatch("trivia/fetchQuestions", 200);
       }
       return filteredQuestions;
     },
-    loadingCards () {
+    loadingCards() {
       return this.$store.state.trivia.loading ? new Array(25) : [];
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.loadMoreOnScroll();
 
     if (
       this.$route.query.categories !== undefined &&
-      typeof this.$route.query.categories === 'string'
+      typeof this.$route.query.categories === "string"
     ) {
-      const filterList: string[] = this.$route.query.categories.split(',');
+      const filterList: string[] = this.$route.query.categories.split(",");
       const categories: CategoryFilter[] = [...this.categories];
       categories.forEach((category) => {
         if (!filterList.includes(category.title)) {
@@ -146,12 +111,15 @@ export default Vue.extend({
     }
   },
   methods: {
-    loadMoreOnScroll () {
+    alterSearch(search: string): void {
+      this.search = search;
+    },
+    loadMoreOnScroll() {
       window.onscroll = () => {
         this.loadMoreIfNeeded();
       };
     },
-    loadMoreIfNeeded () {
+    loadMoreIfNeeded() {
       const bottomOfWindow =
         document.documentElement.scrollTop + window.innerHeight >
         document.documentElement.offsetHeight - 100;
@@ -162,17 +130,17 @@ export default Vue.extend({
         // that match the filters/search, then the application will just
         // keep battering the API with requests and have no way
         // of knowing that it should stop asking.
-        const requestCount = this.search === '' ? 25 : 200;
-        this.$store.dispatch('trivia/fetchQuestions', requestCount);
+        const requestCount = this.search === "" ? 25 : 200;
+        this.$store.dispatch("trivia/fetchQuestions", requestCount);
       }
     },
-    filterToggle (index: number) {
+    filterToggle(index: number) {
       const categories: CategoryFilter[] = [...this.categories];
       categories[index].active = !categories[index].active;
       this.categories = categories;
       this.updateCategoriesQuery();
     },
-    filterSelect (index: number) {
+    filterSelect(index: number) {
       const categories: CategoryFilter[] = [...this.categories];
       if (this.activeCategories.length === 1 && categories[index].active) {
         categories.forEach((category: CategoryFilter, catIndex: number) => {
@@ -187,7 +155,7 @@ export default Vue.extend({
       this.categories = categories;
       this.updateCategoriesQuery();
     },
-    updateCategoriesQuery () {
+    updateCategoriesQuery() {
       const activeCategories: CategoryFilter[] = this.categories.filter(
         (category: CategoryFilter) => category.active
       );
@@ -197,14 +165,14 @@ export default Vue.extend({
         query: {
           ...this.$route.query,
           categories: activeCategories
-            .reduce((p: string, cat: CategoryFilter) => p + cat.title + ',', '')
-            .slice(0, -1)
-        }
+            .reduce((p: string, cat: CategoryFilter) => p + cat.title + ",", "")
+            .slice(0, -1),
+        },
       });
     },
-    clearSearch () {
-      this.search = '';
-    }
-  }
+    clearSearch() {
+      this.search = "";
+    },
+  },
 });
 </script>

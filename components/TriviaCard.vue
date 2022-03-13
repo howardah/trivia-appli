@@ -5,7 +5,7 @@
   >
     <div
       :class="
-        `border rounded-md text-left relative flip-card-inner aspect-w-16 aspect-h-9 ${cClass}`
+        `border rounded-md text-left relative flip-card-inner aspect-w-16 aspect-h-12 md:aspect-h-9 ${cClass}`
       "
     >
       <!-- front of card -->

@@ -4,47 +4,40 @@
     @click="flipped = !flipped"
   >
     <div
-      :class="
-        `border rounded-md text-left relative flip-card-inner aspect-w-16 aspect-h-12 md:aspect-h-9 ${cClass}`
-      "
+      :class="`border rounded-md text-left relative flip-card-inner aspect-w-16 aspect-h-12 md:aspect-h-9 ${cClass}`"
     >
       <!-- front of card -->
       <div
-        :class="
-          `front rounded-md absolute w-full h-full bg-${cColor}-300 text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-base`
-        "
+        :class="`front rounded-md absolute w-full h-full bg-${cColor}-300 text-xl sm:text-2xl md:text-3xl lg:text-lg xl:text-base`"
       >
         <div :class="`font-thin rounded-t-md px-5 py-3 bg-${cColor}-500`">
-          <span class="text-white font-bold" v-html="question.category" />
+          <span class="text-white font-bold">{{ question.category }}</span>
           <IconsStar
             v-for="(key, index) in starRating"
             :key="index"
             :hue="cColor"
           />
         </div>
-        <div
-          :class="`font-bold p-5 text-${cColor}-900`"
-          v-html="question.formattedQuestion"
-        />
+        <div :class="`font-bold p-5 text-${cColor}-900`">
+          {{ displayQuestion }}
+        </div>
 
         <div />
       </div>
       <!-- back of card -->
       <div
-        :class="
-          `back rounded-md p-5 absolute w-full h-full bg-${cColor}-500 text-white`
-        "
+        :class="`back rounded-md p-5 absolute w-full h-full bg-${cColor}-500 text-white`"
       >
         <div
-          :class="
-            `text-white text-lg sm:text-xl md:text-2xl lg:text-base xl:text-sm text-${cColor}-100`
-          "
-          v-html="question.formattedQuestion"
-        />
+          :class="`text-white text-lg sm:text-xl md:text-2xl lg:text-base xl:text-sm text-${cColor}-100`"
+        >
+          {{ displayQuestion }}
+        </div>
         <div
           class="text-white font-bold text-4xl sm:text-5xl md:text-6xl lg:text-2xl xl:text-2xl text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-          v-html="question.correct_answer"
-        />
+        >
+          {{ displayAnswer }}
+        </div>
       </div>
     </div>
   </div>
@@ -52,6 +45,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import { decode } from 'html-entities';
 import { TriviaQuestion } from '~/@types/trivia-question';
 
 export default Vue.extend({
@@ -61,7 +55,7 @@ export default Vue.extend({
       type: Object as () => TriviaQuestion
     }
   },
-  
+
   data () {
     return {
       displaySide: 'front',
@@ -84,6 +78,12 @@ export default Vue.extend({
     cColor () {
       const cColor: string = this.question.categoryColor;
       return cColor;
+    },
+    displayQuestion (): string {
+      return decode(this.question.formattedQuestion);
+    },
+    displayAnswer (): string {
+      return decode(this.question.correct_answer);
     }
     // Because the API is intended for multiple choice
     // formatted questions, some questions don't make sense

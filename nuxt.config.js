@@ -1,28 +1,28 @@
-import colors from "tailwindcss/colors";
+import colors from 'tailwindcss/colors';
 
 export default {
   head: {
-    title: "Trivia! Trivia!",
+    title: 'Trivia! Trivia!',
     htmlAttrs: {
-      lang: "en",
+      lang: 'en'
     },
     meta: [
-      { charset: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { hid: "description", name: "description", content: "" },
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { hid: 'description', name: 'description', content: '' }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
   css: [],
   plugins: [],
-  target: "static",
+  target: 'static',
   components: true,
   buildModules: [
-    "@nuxt/typescript-build",
-    "@nuxtjs/tailwindcss",
-    "@nuxtjs/google-fonts",
+    '@nuxt/typescript-build',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/google-fonts'
   ],
-  modules: ["@nuxtjs/axios"],
+  modules: ['@nuxtjs/axios'],
   axios: {},
 
   tailwindcss: {
@@ -38,16 +38,16 @@ export default {
             lime: colors.lime,
             emerald: colors.emerald,
             brown: {
-              50: "#F2F0EE",
-              100: "#EDDFCE",
-              200: "#E1C39A",
-              300: "#D6AB74",
-              400: "#BF9469",
-              500: "#AF8358",
-              600: "#936642",
-              700: "#6D4B24",
-              800: "#634219",
-              900: "#473516",
+              50: '#F2F0EE',
+              100: '#EDDFCE',
+              200: '#E1C39A',
+              300: '#D6AB74',
+              400: '#BF9469',
+              500: '#AF8358',
+              600: '#936642',
+              700: '#6D4B24',
+              800: '#634219',
+              900: '#473516'
             },
             red: colors.red,
             teal: colors.teal,
@@ -64,41 +64,41 @@ export default {
               600: colors.slate[200],
               700: colors.slate[300],
               800: colors.slate[400],
-              900: colors.slate[500],
-            },
+              900: colors.slate[500]
+            }
           },
           fontFamily: {
-            "press-start": [
+            'press-start': [
               '"Press Start 2P"',
-              "Source Sans Pro",
-              "BlinkMacSystemFont",
-              "Segoe UI",
-              "Roboto",
-              "Helvetica Neue",
-              "Arial",
-              "sans-serif",
+              'Source Sans Pro',
+              'BlinkMacSystemFont',
+              'Segoe UI',
+              'Roboto',
+              'Helvetica Neue',
+              'Arial',
+              'sans-serif'
             ],
             sans: [
-              "Source Sans Pro",
-              "BlinkMacSystemFont",
-              "Segoe UI",
-              "Roboto",
-              "Helvetica Neue",
-              "Arial",
-              "sans-serif",
-            ],
-          },
-        },
+              'Source Sans Pro',
+              'BlinkMacSystemFont',
+              'Segoe UI',
+              'Roboto',
+              'Helvetica Neue',
+              'Arial',
+              'sans-serif'
+            ]
+          }
+        }
       },
-      plugins: [require("@tailwindcss/aspect-ratio")],
-    },
+      plugins: [require('@tailwindcss/aspect-ratio')]
+    }
   },
 
   googleFonts: {
     families: {
-      "Source+Sans+Pro": [300, 400, 600, 700],
-      "Press+Start+2P": true,
-    },
+      'Source+Sans+Pro': [300, 400, 600, 700],
+      'Press+Start+2P': true
+    }
   },
-  build: {},
+  build: {}
 };

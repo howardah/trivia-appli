@@ -22,7 +22,7 @@ export default Vue.extend({
       type: Boolean,
       required: true
     },
-    
+
     color: {
       type: String,
       default: 'grey'

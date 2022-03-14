@@ -1,8 +1,8 @@
 <template>
   <div class="filters max-w-screen-lg pb-0 md:pb-2 p-2 m-auto">
-    <div @click="showMenu = !showMenu" :class="`mobile title ${menuClass}`"
-      >FILTERS <span class="arrow">^</span></div
-    >
+    <div :class="`mobile title ${menuClass}`" @click="showMenu = !showMenu">
+      FILTERS <span class="arrow">^</span>
+    </div>
     <div :class="`menu ${menuClass}`">
       <span class="desktop title">FILTERS:</span>
       <filter-button
@@ -25,7 +25,7 @@
         class="border rounded-md px-2"
         placeholder="SEARCH"
         type="text"
-      />
+      >
       <CloseButton
         v-if="search !== ''"
         class="cursor-pointer"
@@ -37,52 +37,37 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
 export default Vue.extend({
-  data() {
-    return { search: "", showMenu: false, windowWidth: 0, txt: "" };
-  },
-
-  watch: {
-    windowHeight(newHeight, oldHeight) {
-      this.txt = `it changed to ${newHeight} from ${oldHeight}`;
-    },
-  },
-  computed: {
-    mobile(): boolean {
-      console.log(this.windowWidth);
-      return this.windowWidth > 300;
-    },
-    menuClass(): string {
-      return this.showMenu ? "open" : "closed";
-    },
-    searcher: {
-      get(): string {
-        return this.search;
-      },
-      set(value: string) {
-        this.search = value;
-        this.alterSearch(value);
-      },
-    },
-  },
-  methods: {
-    tellMeMore(data: any) {
-      console.log(data);
-    },
-  },
   props: {
     categories: { type: Array, required: true },
     toggle: { type: Function, required: true },
-    alterSearch: { type: Function, required: true },
+    alterSearch: { type: Function, required: true }
   },
-  mounted() {
-    this.windowWidth = window.innerWidth;
-    window.onresize = () => {
-      this.windowWidth = window.innerWidth;
-    };
+  data () {
+    return { search: '', showMenu: false, txt: '' };
   },
+  computed: {
+    menuClass (): string {
+      return this.showMenu ? 'open' : 'closed';
+    },
+    searcher: {
+      get (): string {
+        return this.search;
+      },
+      set (value: string) {
+        this.search = value;
+        this.alterSearch(value);
+      }
+    }
+  },
+
+  watch: {
+    windowHeight (newHeight, oldHeight) {
+      this.txt = `it changed to ${newHeight} from ${oldHeight}`;
+    }
+  }
 });
 </script>
 
@@ -121,7 +106,7 @@ $border: 2px solid #e4e7eb
       background: #e2e8f054
 
       .arrow
-        position: absolute 
+        position: absolute
         left: calc(50% + 2em)
         top: .7em
 
@@ -129,6 +114,4 @@ $border: 2px solid #e4e7eb
         .arrow
           transform: rotate(180deg)
           top: .4em
-
-      
 </style>

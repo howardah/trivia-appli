@@ -10,8 +10,8 @@
         :key="index"
         :color="category.color"
         :active="category.active"
-        @click.native="toggle(index)"
-        @contextmenu.native="
+        @click="toggle(index)"
+        @contextmenu="
           (e) => {
             e.preventDefault();
             filterSelect(index);
@@ -20,53 +20,36 @@
       >
         {{ category.title.replaceAll("-", " ") }}
       </filter-button>
-      <input
-        v-model="searcher"
-        class="border rounded-md px-2"
-        placeholder="SEARCH"
-        type="text"
-      >
-      <CloseButton
-        v-if="search !== ''"
-        class="cursor-pointer"
-        color="gray"
-        @click.native="clearSearch"
-      />
+      <input v-model="searcher" class="border rounded-md px-2" placeholder="SEARCH" type="text">
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script lang="ts" setup>
+import { computed, ref } from 'vue';
+import { CategoryFilter } from '~/@types/components';
 
-export default Vue.extend({
-  props: {
-    categories: { type: Array, required: true },
-    toggle: { type: Function, required: true },
-    alterSearch: { type: Function, required: true }
-  },
-  data () {
-    return { search: '', showMenu: false, txt: '' };
-  },
-  computed: {
-    menuClass (): string {
-      return this.showMenu ? 'open' : 'closed';
-    },
-    searcher: {
-      get (): string {
-        return this.search;
-      },
-      set (value: string) {
-        this.search = value;
-        this.alterSearch(value);
-      }
-    }
-  },
+const search = ref('');
+const showMenu = ref(false);
 
-  watch: {
-    windowHeight (newHeight, oldHeight) {
-      this.txt = `it changed to ${newHeight} from ${oldHeight}`;
-    }
+const props =
+  defineProps<{ categories: CategoryFilter[]; toggle: Function; alterSearch: Function }>();
+
+const menuClass = computed((): string => {
+  return showMenu.value ? 'open' : 'closed';
+});
+
+const setSearch = (newSearch: string):void => {
+  search.value = newSearch;
+  props.alterSearch(newSearch);
+};
+
+const searcher = computed({
+  get (): string {
+    return search.value;
+  },
+  set (value: string) {
+    setSearch(value);
   }
 });
 </script>

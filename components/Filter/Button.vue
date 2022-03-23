@@ -1,47 +1,33 @@
 <template>
   <div
-    :class="
-      `text-${textColor}
+    :class="`text-${textColor}
       inline-block border grou
       px-4 py-1 capitalize m-2
       cursor-pointer rounded-full bg-${bgColor}-500
-      hover:bg-${bgColor}-600`
-    "
+      hover:bg-${bgColor}-600`"
   >
     <slot />
-    <IconsClose v-if="active" :hue="color" />
+    <IconClose v-if="active" :hue="color" />
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script lang="ts" setup>
+import { withDefaults, computed } from 'vue';
 
-export default Vue.extend({
-  props: {
-    active: {
-      type: Boolean,
-      required: true
-    },
-
-    color: {
-      type: String,
-      default: 'grey'
-    }
-  },
-
-  computed: {
-    bgColor () {
-      if (!this.active) return 'white';
-      const color: string = this.color;
-      return color;
-    },
-
-    textColor () {
-      if (this.active) return 'white';
-      return 'grey-800';
-    }
-  }
+const props = withDefaults(defineProps<{ active: boolean; color?: string }>(), {
+  color: 'grey'
 });
+
+const bgColor = computed(() => {
+  if (!props.active) return 'white';
+  const color: string = props.color;
+  return color;
+});
+const textColor = computed(() => {
+  if (props.active) return 'white';
+  return 'grey-800';
+});
+
 </script>
 
 <style scoped>

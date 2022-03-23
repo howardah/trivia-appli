@@ -5,6 +5,5 @@ export default defineNuxtConfig({
   head: {
     title: "Trivia! Trivia!",
   },
-  target: "static",
   buildModules: ["@nuxtjs/tailwindcss"],
 });

@@ -18,7 +18,7 @@
           }
         "
       >
-        {{ category.title.replaceAll("-", " ") }}
+        {{ category.title.replace(/-/g, " ") }}
       </filter-button>
       <input v-model="searcher" class="border rounded-md px-2" placeholder="SEARCH" type="text">
     </div>

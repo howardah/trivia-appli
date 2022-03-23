@@ -7,7 +7,7 @@
     x="0px"
     y="0px"
     viewBox="0 0 864 864"
-    style="enable-background:new 0 0 864 864;"
+    style="enable-background: new 0 0 864 864"
     xml:space="preserve"
   >
     <polygon
@@ -18,19 +18,11 @@
   </svg>
 </template>
 
-<script lang="ts">
-import Vue from 'vue';
+<script lang="ts" setup>
+import { withDefaults } from 'vue';
 
-export default Vue.extend({
-  props: {
-    hue: {
-      type: String,
-      default: 'gray'
-    },
-    tint: {
-      type: String,
-      default: '700'
-    }
-  }
+const props = withDefaults(defineProps<{ hue?: string; tint?: number }>(), {
+  hue: 'gray',
+  tint: 700
 });
 </script>

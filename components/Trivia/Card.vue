@@ -39,7 +39,7 @@
           />
         </div>
         <div :class="`font-bold p-5 text-${question.categoryColor}-900`">
-          <slot></slot>
+          <slot />
           {{ htmlQuestion }}
         </div>
 

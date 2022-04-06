@@ -12,7 +12,7 @@
   >
     <g>
       <circle
-        :class="`fill-current text-${hue}-${tint.toString()} group-hover:text-${hue}-${hoverTint.toString()}`"
+        :class="`fill-current ${textColor} group-hover:${hoverTextColor}`"
         cx="432"
         cy="432"
         r="432"
@@ -33,10 +33,12 @@ const props = withDefaults(defineProps<{ hue?: string; tint?: number }>(), {
   tint: 700
 });
 
-const hoverTint = computed((): number => {
-  if (props.tint === 50) {
-    return 100;
-  }
-  return props.tint + 100;
+const textColor = computed((): string => {
+  return `text-${props.hue.toString()}-${props.tint.toString()}`;
+});
+
+const hoverTextColor = computed((): string => {
+  const hoverTint = props.tint === 50 ? 100 : props.tint + 100;
+  return `text-${props.hue}-${hoverTint.toString()}`;
 });
 </script>

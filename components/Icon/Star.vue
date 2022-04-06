@@ -11,7 +11,7 @@
     xml:space="preserve"
   >
     <polygon
-      :class="`fill-current text-${hue.toString()}-${tint.toString()}`"
+      :class="`fill-current ${textColor}`"
       points="431.5,21 565.2,291.8 864,335.2 647.8,546 698.8,843.6 431.5,703.1 164.2,843.6 215.3,546 -1,335.2
         297.9,291.8 "
     />
@@ -19,10 +19,14 @@
 </template>
 
 <script lang="ts" setup>
-import { withDefaults } from 'vue';
+import { withDefaults, computed } from 'vue';
 
 const props = withDefaults(defineProps<{ hue?: string; tint?: number }>(), {
   hue: 'gray',
   tint: 700
+});
+
+const textColor = computed((): string => {
+  return `text-${props.hue.toString()}-${props.tint.toString()}`;
 });
 </script>

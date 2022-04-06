@@ -2,7 +2,8 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
+    'vue/setup-compiler-macros': true
   },
   extends: [
     'plugin:vue/vue3-recommended',
@@ -14,6 +15,12 @@ module.exports = {
   rules: {
     semi: ['error', 'always'],
     curly: ['error', 'multi-line'],
-    'vue/script-setup-uses-vars': 'error'
+    'vue/script-setup-uses-vars': 'error',
+    'vue/multi-word-component-names': [
+      'error',
+      {
+        ignores: ['default']
+      }
+    ]
   }
 };

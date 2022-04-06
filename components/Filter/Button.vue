@@ -1,7 +1,7 @@
 <template>
   <div
     :class="`text-${textColor}
-      inline-block border grou
+      inline-block border group
       px-4 py-1 capitalize m-2
       cursor-pointer rounded-full bg-${bgColor}-500
       hover:bg-${bgColor}-600`"

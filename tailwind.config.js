@@ -2,7 +2,7 @@ const colors = require('tailwindcss/colors');
 
 module.exports = {
   content: [],
-  safelist: [{ pattern: /(bg|text)-(.*)-([1-9]0{1,2})/ }],
+  safelist: [{ pattern: /(bg|text)-(.*)-([1-9]0{1,2})/, variants: ['hover'] }],
   theme: {
     extend: {
       colors: {

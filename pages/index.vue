@@ -1,5 +1,7 @@
 <template>
-  <div class="font-sans m-auto items-center flex text-center justify-center min-h-screen">
+  <div
+    class="font-sans m-auto items-center flex text-center justify-center min-h-screen"
+  >
     <div class="w-full">
       <div
         class="sticky z-10 bg-white w-full md:border-b-2 -top-24 md:-top-28 lg:-top-44 right-0 md:pb-5"
@@ -22,8 +24,15 @@
       <div
         class="grid sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 auto-rows-max max-w-screen-xl m-auto mt-5"
       >
-        <TriviaCard v-for="question in questionsDisplay" :key="question.id" :question="question" />
-        <TriviaCardPlaceholder v-for="(empty, index) in loadingCards" :key="questionsDisplay.length + index" />
+        <TriviaCard
+          v-for="question in questionsDisplay"
+          :key="question.id"
+          :question="question"
+        />
+        <TriviaCardPlaceholder
+          v-for="(empty, index) in loadingCards"
+          :key="questionsDisplay.length + index"
+        />
       </div>
     </div>
   </div>
@@ -31,10 +40,14 @@
 
 <script lang="ts" setup>
 import { ref, computed, onMounted } from 'vue';
-// import { useRoute, useRouter } from "@nuxtjs/composition-api";
+import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
 import { CategoryFilter } from '~/@types/components';
-import { colorLookup, initialiseTriviaQuestion, TriviaQuestion } from '~/@types/trivia-question';
+import {
+  colorLookup,
+  initialiseTriviaQuestion,
+  TriviaQuestion
+} from '~/@types/trivia-question';
 
 const search = ref('');
 const categories = ref([] as CategoryFilter[]);
@@ -44,8 +57,8 @@ const loading = ref(true);
 const route = useRoute();
 const router = useRouter();
 
-let fetching:boolean = false;
-const fetchQuestions = async (quantity: number):Promise<void> => {
+let fetching: boolean = false;
+const fetchQuestions = async (quantity: number): Promise<void> => {
   if (fetching) return;
   fetching = true;
   loading.value = true;
@@ -57,13 +70,15 @@ const fetchQuestions = async (quantity: number):Promise<void> => {
     });
 
   if (triviaResults && triviaResults?.data?.results) {
-    triviaResults.data.results.forEach((questionResult: any, _index: number) => {
-      const question: TriviaQuestion = initialiseTriviaQuestion({
-        ...questionResult,
-        id: null
-      });
-      questions.value.push(question);
-    });
+    triviaResults.data.results.forEach(
+      (questionResult: any, _index: number) => {
+        const question: TriviaQuestion = initialiseTriviaQuestion({
+          ...questionResult,
+          id: null
+        });
+        questions.value.push(question);
+      }
+    );
   }
 
   loading.value = false;
@@ -87,19 +102,25 @@ const activeCategories = computed(() => {
 });
 
 const questionsDisplay = computed(() => {
-  let filteredQuestions: TriviaQuestion[] = questions.value.filter((q: TriviaQuestion) => {
-    return activeCategories.value.some((cat: CategoryFilter) => cat.title === q.categoryClass);
-  });
+  let filteredQuestions: TriviaQuestion[] = questions.value.filter(
+    (q: TriviaQuestion) => {
+      return activeCategories.value.some(
+        (cat: CategoryFilter) => cat.title === q.categoryClass
+      );
+    }
+  );
 
   if (search.value !== '') {
-    const searchPhrase = search.value.toLowerCase();
+    const searcher = search.value.toLowerCase();
+    const difficulty = { '***': 'hard', '**': 'medium', '*': 'easy' };
     const furtherFilteredQuestions: TriviaQuestion[] = filteredQuestions.filter(
       (q: TriviaQuestion) => {
-        if (q.question.toLowerCase().includes(searchPhrase)) return true;
-        if (q.category.toLowerCase().includes(searchPhrase)) return true;
-        if (q.difficulty.toLowerCase().includes(searchPhrase)) return true;
-        if (q.type.toLowerCase().includes(searchPhrase)) return true;
-        if (q.correct_answer.toLowerCase().includes(searchPhrase)) return true;
+        const searchString =
+          q.question + q.category + q.type + q.correct_answer;
+
+        if (searchString.toLowerCase().includes(searcher)) return true;
+        if (difficulty[searcher] && q.difficulty.includes(difficulty[searcher])) { return true; }
+
         return false;
       }
     );
@@ -138,22 +159,6 @@ const filterToggle = (index: number) => {
   updateCategoriesQuery();
 };
 
-// const filterSelect = (index: number) => {
-//   const categoriesDup: CategoryFilter[] = [...categories.value];
-//   if (activeCategories.value.length === 1 && categories[index].active) {
-//     categoriesDup.forEach((category: CategoryFilter, catIndex: number) => {
-//       category.active = !(catIndex === index);
-//     });
-//   } else {
-//     categoriesDup.forEach((category: CategoryFilter, catIndex: number) => {
-//       category.active = catIndex === index;
-//     });
-//   }
-
-//   categories.value = categoriesDup;
-//   updateCategoriesQuery();
-// };
-
 const updateCategoriesQuery = () => {
   const activeCategories: CategoryFilter[] = categories.value.filter(
     (category: CategoryFilter) => category.active
@@ -177,7 +182,10 @@ onMounted(() => {
 
   fetchQuestions(25);
 
-  if (route.query.categories !== undefined && typeof route.query.categories === 'string') {
+  if (
+    route.query.categories !== undefined &&
+    typeof route.query.categories === 'string'
+  ) {
     const filterList: string[] = route.query.categories.split(',');
     const categoriesDup: CategoryFilter[] = [...categories.value];
     categoriesDup.forEach((category) => {

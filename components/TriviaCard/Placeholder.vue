@@ -28,5 +28,3 @@ const question: TriviaQuestion = {
   incorrect_answers: ['&nbsp;', '&nbsp;', '&nbsp;']
 };
 </script>
-
-<style scoped></style>

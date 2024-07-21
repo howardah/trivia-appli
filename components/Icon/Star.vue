@@ -19,11 +19,24 @@
 </template>
 
 <script lang="ts" setup>
-import { withDefaults, computed } from 'vue';
+import { computed } from 'vue';
+import colors from 'tailwindcss/colors';
 
-const props = withDefaults(defineProps<{ hue?: string; tint?: number }>(), {
-  hue: 'gray',
-  tint: 700
+const props = defineProps({
+  hue: {
+    type: String,
+    default: 'gray',
+    validator: (value: string) => {
+      return [...Object.keys(colors), 'lightGray', 'brown'].includes(value);
+    }
+  },
+  tint: {
+    type: Number,
+    default: 700,
+    validator: (value: number) => {
+      return /[1-9]0{0,1}/.test(value.toString());
+    }
+  }
 });
 
 const textColor = computed((): string => {

@@ -3,14 +3,16 @@
     "extends": "./.nuxt/tsconfig.json",
   
     "compilerOptions": {
+      "esModuleInterop": true,
       "paths": {
         "~/*": ["./*"],
         "@/*": ["./*"]
-      }
+      },
+      "types": [
+        "@types/node",
+        "@types/jest"
+      ]
     },
   
-    "types": [
-      "@types/tailwindcss",
-    ]
   }
   

@@ -1,83 +1,71 @@
-const colorLookup: Record<string, string> = {
-  "general-knowledge": "rose",
-  entertainment: "fuchsia",
-  science: "indigo",
-  mythology: "purple",
-  sports: "lime",
-  geography: "emerald",
-  history: "brown",
-  politics: "red",
-  arts: "teal",
-  celebrities: "amber",
-  animals: "orange",
-  vehicles: "gray"
-};
+import { categoryColors } from '~/assets/dictionaries'
 
-type TriviaQuestionType = {
-  id?: number;
-  category: string;
-  type: string;
-  question: string;
-  difficulty: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-};
-
-type TriviaQuestion = {
-  id?: number;
-  category: string;
-  categoryClass: string;
-  categoryColor: string;
-  type: string;
-  difficulty: string;
-  question: string;
-  formattedQuestion: string;
-  correct_answer: string;
-  incorrect_answers: string[];
-};
-
-function initialiseTriviaQuestion(
-  trivia_question: TriviaQuestionType
-): TriviaQuestion {
-  const categoryClass = (() => {
-    let categoryClass: string = trivia_question.category.toLowerCase();
-
-    if (categoryClass === "science & nature") categoryClass = "science";
-
-    const subCategory: RegExp = /(\w+):[\W]*(.*)/;
-    if (subCategory.test(categoryClass)) {
-      const catMatch = categoryClass.match(subCategory);
-      if (catMatch !== null) categoryClass = catMatch[1];
-    }
-
-    return categoryClass.replace(/ /g, "-");
-  })();
-
-  const categoryColor = colorLookup[categoryClass];
-
-  const formattedQuestion = (() => {
-    if (trivia_question.type === "boolean")
-      return "True or False: " + trivia_question.question;
-    return trivia_question.question;
-  })();
-
-  return {
-    id: trivia_question.id,
-    category: trivia_question.category,
-    difficulty: trivia_question.difficulty,
-    type: trivia_question.type,
-    question: trivia_question.question,
-    correct_answer: trivia_question.correct_answer,
-    incorrect_answers: trivia_question.incorrect_answers,
-    categoryClass: categoryClass,
-    categoryColor: categoryColor,
-    formattedQuestion: formattedQuestion
-  };
+export type TriviaQuestionApiResult = {
+  category: string
+  type: 'boolean' | 'multiple'
+  question: string
+  difficulty: 'easy' | 'medium' | 'hard'
+  correct_answer: string
+  incorrect_answers: string[]
 }
 
-export {
-  TriviaQuestion,
-  TriviaQuestionType,
-  initialiseTriviaQuestion,
-  colorLookup
-};
+interface TriviaQuestionInterface {
+  id: number
+  category: string
+  categoryClass: TriviaCategory
+  categoryColor: CategoryColor
+  type: 'boolean' | 'multiple'
+  difficulty: 'easy' | 'medium' | 'hard'
+  question: string
+  formattedQuestion: string
+  correct_answer: string
+  incorrect_answers: string[]
+  starRating: number
+  mustShowChoices: boolean
+}
+
+class TriviaQuestion implements TriviaQuestionInterface {
+  id: number
+  category!: string
+  categoryClass: TriviaCategory
+  categoryColor: CategoryColor
+  type!: 'boolean' | 'multiple'
+  difficulty!: 'easy' | 'medium' | 'hard'
+  question!: string
+  formattedQuestion!: string
+  correct_answer!: string
+  incorrect_answers!: string[]
+  starRating: number
+  mustShowChoices: boolean
+
+  constructor(apiQuestion: TriviaQuestionApiResult, id: number) {
+    console.log(apiQuestion)
+    Object.assign(this, apiQuestion)
+    this.id = id
+
+    let categoryClass: string = apiQuestion.category.toLowerCase()
+    if (categoryClass === 'science & nature') categoryClass = 'science'
+
+    const subCategory: RegExp = /(\w+):[\W]*(.*)/
+    if (subCategory.test(categoryClass)) {
+      const catMatch = categoryClass.match(subCategory)
+      if (catMatch !== null) categoryClass = catMatch[1]
+    }
+
+    this.categoryClass = categoryClass.replace(/ /g, '-') as TriviaCategory
+
+    this.categoryColor = categoryColors[this.categoryClass]
+    this.formattedQuestion =
+      apiQuestion.type === 'boolean'
+        ? 'True or False: ' + apiQuestion.question
+        : '' + apiQuestion.question
+
+    this.starRating = apiQuestion.difficulty === 'easy' ? 1 : apiQuestion.difficulty === 'medium' ? 2 : 3
+    
+    const needsChoices = /which of (?:the following|these)|which .* (?:is|was) not/i.test(apiQuestion.question)
+    console.log('needsChoices', needsChoices)
+    this.mustShowChoices = needsChoices;
+  }
+}
+
+export { TriviaQuestion, categoryColors }

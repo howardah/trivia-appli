@@ -1,5 +1,5 @@
 <template>
-  <div
+  <button
     :class="`text-${textColor}
       inline-block border group
       px-4 py-1 capitalize m-2
@@ -8,14 +8,14 @@
   >
     <slot />
     <IconClose v-if="active" :hue="color" />
-  </div>
+  </button>
 </template>
 
 <script lang="ts" setup>
 import { withDefaults, computed } from 'vue';
 
 const props = withDefaults(defineProps<{ active: boolean; color?: string }>(), {
-  color: 'grey'
+  color: 'gray'
 });
 
 const bgColor = computed(() => {
@@ -25,7 +25,7 @@ const bgColor = computed(() => {
 });
 const textColor = computed(() => {
   if (props.active) return 'white';
-  return 'grey-800';
+  return 'gray-800';
 });
 
 </script>

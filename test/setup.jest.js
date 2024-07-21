@@ -4,21 +4,19 @@
 // component registration. The bones of the method that I used comes from here:
 // https://github.com/nuxt/components/issues/58#issuecomment-1040693942
 
-const path = require('path');
-const glob = require('glob');
-const Vue = require('vue');
+const path = require("path");
+const glob = require("glob");
+const { config } = require("@vue/test-utils");
 
 const transformCompNames = (str) => {
   return str
-    .split('/')
+    .split("/")
     .reduce((t, p) => t + p.charAt(0).toUpperCase() + p.slice(1));
 };
 
-glob.sync(path.join(__dirname, '../components/**/*.vue')).forEach((file) => {
+glob.sync(path.join(__dirname, "../components/**/*.vue")).forEach((file) => {
   const name = transformCompNames(
     file.match(/components\/((?:.(?!components))+)\.vue$/)[1]
   );
-  Vue.component(name, require(file).default);
+  config.global.components[name] = require(file).default;
 });
-
-global.Vue = Vue;

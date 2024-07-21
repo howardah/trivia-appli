@@ -1,13 +1,12 @@
-import { mount, Wrapper } from "@vue/test-utils";
+// import type Vue from "vue"
+import { config, flushPromises, mount, VueWrapper } from "@vue/test-utils";
 import TriviaCard from "@/components/TriviaCard.vue";
 import TriviaCardPlaceholder from "~/components/TriviaCard/Placeholder.vue";
 import FilterButton from "~/components/Filter/Button.vue";
-import IconsClose from "~/components/Icons/Close.vue";
-import {
-  colorLookup,
-  initialiseTriviaQuestion,
-  TriviaQuestion,
-} from "~/@types/trivia-question";
+import IconClose from "~/components/Icon/Close.vue";
+import { TriviaQuestion } from "~/@types/trivia-question";
+import { categoryColors } from "~/assets/dictionaries";
+import index from "~/pages/index.vue";
 
 // Because I wanted to take advantage of Nuxt's auto import of components
 // I had to do something a little 'hacky' feeling to get the tests to accept
@@ -16,19 +15,21 @@ import {
 // https://github.com/nuxt/components/issues/58#issuecomment-904230080
 
 describe("TriviaCard.vue", () => {
-  const testQuestion: TriviaQuestion = initialiseTriviaQuestion({
-    id: 1,
-    category: "General Knowledge",
-    type: "boolean",
-    difficulty: "medium",
-    question: "Cucumbers are usually more than 90% water.",
-    correct_answer: "True",
-    incorrect_answers: ["False"],
-  });
+  const testQuestion: TriviaQuestion = new TriviaQuestion(
+    {
+      category: "General Knowledge",
+      type: "boolean",
+      difficulty: "medium",
+      question: "Cucumbers are usually more than 90% water.",
+      correct_answer: "True",
+      incorrect_answers: ["False"],
+    },
+    1
+  );
 
   test("Test that Trivia Card Rendors Boolean Question", () => {
-    const wrapper: Wrapper<Vue, Element> = mount(TriviaCard, {
-      propsData: {
+    const wrapper: VueWrapper<any> = mount(TriviaCard, {
+      props: {
         question: testQuestion,
       },
     });
@@ -36,8 +37,8 @@ describe("TriviaCard.vue", () => {
   });
 
   test("Test that Trivia Card Flips When Clicked", async () => {
-    const wrapper: Wrapper<Vue, Element> = mount(TriviaCard, {
-      propsData: {
+    const wrapper: VueWrapper<any> = mount(TriviaCard, {
+      props: {
         question: testQuestion,
       },
     });
@@ -52,7 +53,7 @@ describe("TriviaCard.vue", () => {
 
 describe("TriviaCardPlaceholder.vue", () => {
   test("Test that Trivia Card Placeholder Rendors", () => {
-    const wrapper: Wrapper<Vue, Element> = mount(TriviaCardPlaceholder);
+    const wrapper: VueWrapper<any> = mount(TriviaCardPlaceholder);
     expect(wrapper.vm).toBeTruthy();
   });
 });
@@ -62,25 +63,25 @@ describe("FilterButton.vue", () => {
     /<svg[\w\W]*?>[\w\W]*<circle[\w\W]*?<\/circle>[\w\W]*<polygon[\w\W]*?><\/polygon>[\w\W]*?<\/svg>/;
 
   test("Test that the filter button renders the X icon when active", () => {
-    const wrapper: Wrapper<Vue, Element> = mount(FilterButton, {
-      propsData: { active: true },
+    const wrapper: VueWrapper<any> = mount(FilterButton, {
+      props: { active: true },
     });
     expect(wrapper.html()).toMatch(iconCloseRegEx);
   });
 
   test("Test that the filter button doesn't render the X icon when inactive", () => {
-    const wrapper: Wrapper<Vue, Element> = mount(FilterButton, {
-      propsData: { active: false },
+    const wrapper: VueWrapper<any> = mount(FilterButton, {
+      props: { active: false },
     });
     expect(wrapper.html()).not.toMatch(iconCloseRegEx);
   });
 });
 
-describe("IconsClose.vue", () => {
-  Object.values(colorLookup).forEach((color) => {
+describe("IconClose.vue", () => {
+  Object.values(categoryColors).forEach((color) => {
     test(`Test that ${color} render correctly`, () => {
-      const wrapper: Wrapper<Vue, Element> = mount(IconsClose, {
-        propsData: {
+      const wrapper: VueWrapper<any> = mount(IconClose, {
+        props: {
           hue: color,
           tint: 600,
         },
@@ -91,8 +92,8 @@ describe("IconsClose.vue", () => {
   });
 
   test(`Test that tint of 50 renders as 100 for hover`, () => {
-    const wrapper: Wrapper<Vue, Element> = mount(IconsClose, {
-      propsData: {
+    const wrapper: VueWrapper<any> = mount(IconClose, {
+      props: {
         hue: "fuchsia",
         tint: 50,
       },
@@ -101,3 +102,40 @@ describe("IconsClose.vue", () => {
     expect(wrapper.html()).toContain(`group-hover:text-fuchsia-100`);
   });
 });
+
+const mockRoute = {
+  query: {
+    categories:
+      "general-knowledge,entertainment,science,mythology,sports,geography,history,politics,arts,celebrities,animals,vehicles",
+  },
+};
+const routePushMock = jest.fn(() => mockRoute);
+const routerPushMock = jest.fn(() => ({}));
+
+jest.mock("vue-router", () => ({
+  useRoute: () => mockRoute,
+  useRouter: () => ({
+    push: routerPushMock,
+  }),
+}));
+
+jest.mock("../assets/calls.ts", () =>
+  jest.requireActual("../assets/__mocks__/calls.ts")
+);
+
+describe("index.vue", () => {
+  // beforeEach(() => {
+  //   jest.resetAllMocks();
+  // });
+
+  test(`Test that trivia questions are displayed`, async () => {
+    const wrapper: VueWrapper<any> = mount(index);
+    // Wait for calls to be made
+    await flushPromises();
+    expect(wrapper.html()).toContain("Who played Sgt. Gordon Elias");
+  });
+});
+
+const triviaApi: string = "https://opentdb.com/api.php";
+const triviaApiSession: string =
+  "https://opentdb.com/api_token.php?command=request";

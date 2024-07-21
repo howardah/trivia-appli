@@ -1,15 +1,9 @@
 module.exports = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/$1',
-    '^~/(.*)$': '<rootDir>/$1',
-    '^vue$': 'vue/dist/vue.common.js'
+    '^~/(.*)$': '<rootDir>/$1'
   },
-  moduleFileExtensions: [
-    'ts',
-    'js',
-    'vue',
-    'json'
-  ],
+  moduleFileExtensions: ['ts', 'js', 'vue', 'json'],
   transform: {
     '^.+\\.ts$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
@@ -21,4 +15,4 @@ module.exports = {
     '<rootDir>/pages/**/*.vue'
   ],
   setupFiles: ['./test/setup.jest.js']
-};
+}

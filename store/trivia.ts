@@ -1,59 +1,97 @@
-import { GetterTree, ActionTree, MutationTree } from "vuex";
-import {
-  initialiseTriviaQuestion,
-  TriviaQuestion
-} from "~/@types/trivia-question";
+import { defineStore } from "pinia";
+import type { CategoryFilter } from "~/@types/components";
+import { categoryColors, TriviaQuestion } from "~/@types/trivia-question";
 
-export const state = () => ({
-  questions: [] as TriviaQuestion[],
-  loading: false
-});
+export const useTriviaStore = defineStore("trivia", () => {
+  const search = ref("");
+  const categories = ref([] as CategoryFilter[]);
+  const questions = ref([] as TriviaQuestion[]);
+  const loading = ref(true);
 
-export type TriviaState = ReturnType<typeof state>;
-
-export const getters: GetterTree<TriviaState, TriviaState> = {
-  questionCount: state => state.questions.length
-};
-
-export const mutations: MutationTree<TriviaState> = {
-  ADD_QUESTIONS: (state, newQuestions: TriviaQuestion[]) => {
-    newQuestions.forEach(newQuestion => {
-      if (
-        !state.questions.some(
-          (q: TriviaQuestion) => q.question === newQuestion.question
-        )
-      ) {
-        newQuestion.id = state.questions.length + 1;
-        state.questions.push(newQuestion);
-      }
+  for (const key in categoryColors) {
+    categories.value.push({
+      title: key,
+      color: categoryColors[key as keyof typeof categoryColors],
+      active: true,
     });
-  },
-  CHANGE_LOAD_STATE: (state, loadState: boolean) => (state.loading = loadState)
-};
+  }
 
-export const actions: ActionTree<TriviaState, TriviaState> = {
-  async fetchQuestions({ commit }, quantity = 25) {
-    commit("CHANGE_LOAD_STATE", true);
+  const activeCategories = computed(() => {
+    return categories.value.filter(
+      (category: CategoryFilter) => category.active
+    );
+  });
 
-    const trivia_api: string = `https://opentdb.com/api.php`;
-    const questions: TriviaQuestion[] = [];
-    const triviaResults = await this.$axios
-      .$get(`${trivia_api}?amount=${quantity}`)
-      .catch(e => {
-        //ToDo: add error handling
+  const questionsActiveCategories = computed((): TriviaQuestion[] => {
+    return questions.value.filter((q: TriviaQuestion) => {
+      return activeCategories.value.some(
+        (cat: CategoryFilter) => cat.title === q.categoryClass
+      );
+    });
+  });
+
+  const questionsSearched = computed((): TriviaQuestion[] => {
+    const searcher = search.value.toLowerCase();
+    const difficulty = { "***": "hard", "**": "medium", "*": "easy" };
+    return questionsActiveCategories.value.filter((q: TriviaQuestion) => {
+      const searchString = q.question + q.category + q.type + q.correct_answer;
+
+      if (searchString.toLowerCase().includes(searcher)) return true;
+      if (
+        difficulty[searcher as keyof typeof difficulty] &&
+        q.difficulty.includes(difficulty[searcher as keyof typeof difficulty])
+      ) {
+        return true;
+      }
+
+      return false;
+    });
+  });
+
+  const questionsDisplay = computed((): TriviaQuestion[] => {
+    return questionsSearched.value;
+  });
+
+  const loadingCards = computed(() => {
+    return loading.value ? new Array(25) : [];
+  });
+
+  const numOfQuestions = computed(() => questions.value.length);
+  const numOfVisibleQuestions = computed(() => questionsDisplay.value.length);
+
+  const filterToggle = (index: number) => {
+    const categoriesCopy: CategoryFilter[] = [...categories.value];
+    categoriesCopy[index].active = !categoriesCopy[index].active;
+    categories.value = categoriesCopy;
+  };
+
+  const filterSelect = (index: number) => {
+    const categoriesCopy: CategoryFilter[] = [...categories.value];
+    if (activeCategories.value.length === 1 && categoriesCopy[index].active) {
+      categoriesCopy.forEach((category: CategoryFilter, catIndex: number) => {
+        category.active = !(catIndex === index);
       });
-
-    if (triviaResults) {
-      triviaResults.results.forEach((questionResult: any, index: number) => {
-        const question: TriviaQuestion = initialiseTriviaQuestion({
-          ...questionResult,
-          id: null
-        });
-        questions.push(question);
+    } else {
+      categoriesCopy.forEach((category: CategoryFilter, catIndex: number) => {
+        category.active = catIndex === index;
       });
     }
+    categories.value = categoriesCopy;
+  };
 
-    commit("ADD_QUESTIONS", questions);
-    commit("CHANGE_LOAD_STATE", false);
-  }
-};
+  return {
+    search,
+    categories,
+    questions,
+    loading,
+    activeCategories,
+    questionsActiveCategories,
+    questionsSearched,
+    questionsDisplay,
+    loadingCards,
+    numOfQuestions,
+    numOfVisibleQuestions,
+    filterToggle,
+    filterSelect,
+  };
+});

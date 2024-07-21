@@ -111,6 +111,8 @@ const loadMoreIfNeeded = async () => {
     // Change alert to toast
     setTimeout(() => {
       if (newQuestions.length >= 5) return
+
+      toast.clear()
       toast.warning(
         `We didn't find ${
           newQuestions.length === 0 ? 'any' : 'many'

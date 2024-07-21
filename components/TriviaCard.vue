@@ -44,7 +44,7 @@
           </span>
         </div>
 
-        <div class="flex flex-col" style="height: calc(100% - cardHeaderHeight);">
+        <div class="flex flex-col" :style="`height: calc(100% - ${cardHeaderHeight}px);`">
           <div
             :class="`font-bold px-5 pt-5 text-${question.categoryColor}-900 ${
               question.mustShowChoices ? 'text-sm' : ''
@@ -126,7 +126,7 @@ const shuffledChoices = computed(() => {
   const choices = [
     ...props.question.incorrect_answers,
     props.question.correct_answer
-  ]
+  ].map(val => decode(val))
   return choices.sort(() => Math.random() - 0.5)
 })
 

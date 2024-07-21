@@ -41,7 +41,7 @@
 
 <script lang="ts" setup>
 import { useRoute, useRouter } from 'vue-router'
-import { POSITION, useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import clone from 'just-clone'
 import type { CategoryFilter } from '~/@types/components'
 import { TriviaQuestion } from '~/@types/trivia-question'
@@ -116,18 +116,11 @@ const loadMoreIfNeeded = async () => {
           newQuestions.length === 0 ? 'any' : 'many'
         } questions, you might consider ammending your search parameters`,
         {
-          position: POSITION.TOP_LEFT,
-          timeout: 5000,
-          closeOnClick: true,
-          pauseOnFocusLoss: true,
+          position: "top-left",
+          queue: true,
+          dismissible: true,
+          duration: 5000,
           pauseOnHover: true,
-          draggable: true,
-          draggablePercent: 0.6,
-          showCloseButtonOnHover: false,
-          hideProgressBar: true,
-          closeButton: 'button',
-          icon: true,
-          rtl: false
         }
       )
     }, 100)
